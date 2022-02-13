@@ -1,7 +1,5 @@
 //create letiable for displaying current expression...
 let displayString = "";
-
-
 //create structure for saving expression...
 let currentExpression = []; // clear button access 
 let clearBtn = document.getElementById("clear");
@@ -30,19 +28,20 @@ clearBtn.addEventListener("click", ()=>{
 let negateBtn = document.getElementById("negpos");
 //negate the readout conent when negative positve toggle is triggered.
 negateBtn.addEventListener("click",()=>{
-    if(hasNumber == true){
+    if(hasNumber){
         let disInt = parseFloat(display.innerText);
-    disInt = disInt * -1;
-    display.innerText = disInt;
+        disInt = disInt * -1;
+        display.innerText = disInt;
     }  
 });
 decimalBtn.addEventListener("click", ()=>{
-    if(hasDecimal == false){
+    if(!hasDecimal){
         let addText = display.innerText + decimalBtn.textContent;
         display.innerText = addText;
         hasDecimal = true;
     }
 });
+
 //for the number buttons.
 let numberBtns = document.getElementsByClassName("numButton");
 
@@ -51,14 +50,14 @@ let hasNumber = false;
 
 //looping through to add listeners.
 for(let i =0; i<numberBtns.length; i++){
-    numberBtns[i].addEventListener("click",()=>{
+        numberBtns[i].addEventListener("click",()=>{
         //enable double and more digits...
         text = display.innerText + numberBtns[i].textContent;
         display.innerText = text;
         //reenable ability to press operators since number has been pressed.
         operatorPressed=false;
         //I have pressed a number. 
-        hasNumber = true;
+        hasNumber=true;
         //exp.push(this.textContent);
     });
 }
@@ -72,9 +71,9 @@ let operationBtns = document.getElementsByClassName("operator");
 
 
 for(let i =0; i < operationBtns.length; i++){
-    operationBtns[i].addEventListener("click",()=>{
+        operationBtns[i].addEventListener("click",()=>{
         //condition one. prevent consecutive operators in expression. condition 2 check to see if preceded by number... 
-        if(operatorPressed==false && hasNumber == true){
+        if(!operatorPressed && hasNumber){
             //save off what loaded in display...
             let prevNum = display.innerText;
             currentExpression.push(prevNum);
@@ -82,16 +81,16 @@ for(let i =0; i < operationBtns.length; i++){
             display.textContent="";
             //add record of what we are doing.... 
             record.innerText=prevNum + operationBtns[i].textContent;
-            hasDecimal = false;
+            hasDecimal=false;
             operatorPressed=true;
-            hasNumber = false;
+            hasNumber=false;
         }
     });
 }
 
 //decimal handling...
 decimalBtn.addEventListener("click", ()=>{
-    if(hasDecimal ==false){
+    if(!hasDecimal){
         let addText = display.innerText + decimalBtn.textContent;
         display.innerText = addText;
         hasDecimal = true;
@@ -105,13 +104,15 @@ decimalBtn.addEventListener("click", ()=>{
 
 let equalsBtn = document.getElementById("equal");
 
-equalsBtn.onclick = function(){
+equalsBtn.addEventListener("click",()=>{
+    if(hasNumber){
+        displayEval();
+        evaluateExpression()  
+}
+});
 
-    //dont even execute unless we have entered a number LAST...
-    if(hasNumber == true){
-        
-    //asssuming result is 0 to start.
-    let result = 0;
+function displayEval(){
+     //all this was literaslly for ==
     //get whatever is on screen from last button press...
     let lastNum = display.innerText;
     //add that last number into the expression array..
@@ -128,41 +129,55 @@ equalsBtn.onclick = function(){
     record.innerText = tempString + "=";
     tempString = tempString + lastNum;
     display.innerText = tempString;
-
-    let x = 0;
-    let y = 0;
-
-    // if exp array is less that 2 in length... my funky algorithm right here 
-       for (let i=0; i<currentExpression.length-2; i++){
-           if(!(currentExpression[i]=="+") && !(currentExpression[i]=="-") && !(currentExpression[i]=="*") && !(currentExpression[i]=="/")){
-               x = parseFloat(currentExpression[i]);
-               y = parseFloat(currentExpression[i+2]);
-               switch(currentExpression[i+1]){
-                    case "+":
-                        result = x + y;
-                    break;
-                    case "-":
-                        //this is trash...What if x and y are decimals
-                        result = x-y;
-                        break;
-                    case "*":
-                        //more trash
-                        result = x*y;
-                        break;
-                    case "/":
-                        //why do you code trash?
-                        result = x/y;
-                        break;
-                    }
-                currentExpression[i+2] = result;
-       }
-   }
-   //what if just a number and then the equals sign?? 
-   if(currentExpression.length == 1){
-       result = lastNum;
-   }
-   display.innerText = result;
-   currentExpression=[];
-    }
 }
 
+function evaluateExpression(){
+
+//asssuming result is 0 to start.
+let result = 0;
+let x = 0;
+let y = 0;
+
+//an algorithm for evaluate...Loop through the expression except for last two. That will be last operation and last number....
+   for (let i=0; i<currentExpression.length-2; i++){
+       //if we have landed on a number...in otherwords if we are not on a valid operator then we want to proceed...
+       if(!["+","-","*","/"].includes(currentExpression[i])){
+           x = +currentExpression[i];
+           y = +currentExpression[i+2];
+           switch(currentExpression[i+1]){
+                case "+":
+                    result = getSum(x,y);
+                break;
+                case "-":
+                    //this is trash...What if x and y are decimals
+                    result = getDiff(x,y);
+                    break;
+                case "*":
+                    result = x*y;
+                    break;
+                case "/":
+                    result = x/y;
+                    break;
+                }
+            currentExpression[i+2] = result;
+   }
+}
+//what if just a number and then the equals sign?? 
+if(currentExpression.length == 1){
+   result = lastNum;
+}
+display.innerText = result;
+currentExpression=[];
+}
+
+function getSum(x,y){
+    xAsInt = parseInt(x * 100);
+    yAsInt = parseInt(y * 100);
+    return (xAsInt + yAsInt)/100;
+}
+
+function getDiff(x,y){
+    xAsInt = parseInt(x * 100);
+    yAsInt = parseInt(y * 100);
+    return (xAsInt - yAsInt)/100;
+}
