@@ -25,6 +25,7 @@ body{
 #record{
     font-weight:bold;
     font-size:20px;
+    min-height: 40.5667px;
     font-family: 'Roboto', sans-serif;
     color:#333a45;
 }

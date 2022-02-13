@@ -49,10 +49,11 @@ let numberBtns = document.getElementsByClassName("numButton");
 let hasNumber = false;
 
 //looping through to add listeners.
-for(let i =0; i<numberBtns.length; i++){
-        numberBtns[i].addEventListener("click",()=>{
+
+for(const btn of numberBtns){
+    btn.addEventListener("click",()=>{
         //enable double and more digits...
-        text = display.innerText + numberBtns[i].textContent;
+        text = display.innerText + btn.textContent;
         display.innerText = text;
         //reenable ability to press operators since number has been pressed.
         operatorPressed=false;
@@ -61,6 +62,7 @@ for(let i =0; i<numberBtns.length; i++){
         //exp.push(this.textContent);
     });
 }
+
 
 // number type 
 //hit opertator saves into array both the curent display and the operation. clears screen. and back to base. 
