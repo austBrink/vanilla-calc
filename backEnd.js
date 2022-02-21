@@ -23,6 +23,7 @@ clearBtn.addEventListener("click", ()=>{
     hasDecimal = false;
     operatorPressed = false;
     hasNumber = false;
+    hasPercent = false;
 });
 
 let negateBtn = document.getElementById("negpos");
@@ -34,6 +35,22 @@ negateBtn.addEventListener("click",()=>{
         display.innerText = disInt;
     }  
 });
+
+//get access to the percent button...
+let percentBtn = document.getElementById("percent");
+let hasPercent = false;
+percentBtn.addEventListener("click", ()=>{
+    let disNumber = +display.innerText;
+    if(hasPercent){
+        disNumber *= 100;
+        hasPercent = false;
+    }else{
+        disNumber /= 100;
+        hasPercent = true;
+    }
+    display.innerText = disNumber;
+})
+
 decimalBtn.addEventListener("click", ()=>{
     if(!hasDecimal){
         let addText = display.innerText + decimalBtn.textContent;
@@ -86,6 +103,7 @@ for(let i =0; i < operationBtns.length; i++){
             hasDecimal=false;
             operatorPressed=true;
             hasNumber=false;
+            hasPercent = false;
         }
     });
 }
@@ -139,6 +157,8 @@ function evaluateExpression(){
 let result = 0;
 let x = 0;
 let y = 0;
+
+hasPercent = false;
 
 //an algorithm for evaluate...Loop through the expression except for last two. That will be last operation and last number....
    for (let i=0; i<currentExpression.length-2; i++){
