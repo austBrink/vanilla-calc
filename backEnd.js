@@ -13,12 +13,12 @@ let text = "";
 let decimalBtn = document.getElementById("dec");
 //signal if decimal was pressed. Cannot duel decimal in same number.
 let hasDecimal = false;
-//signal if shift has been pressed.... 
 
-
+//add listener to entire window for keydowns to capture number and operation presses and fire their buttons.
 window.addEventListener('keydown',function(e){
-  
-    var key = document.querySelector(`.numButton[data-key = "${e.keyCode}"]`);
+    //Grab the HTML element that corresponds to the keypress via data-key att\
+    //since I am stupid, the HTML was not set up for this we'll need to check through several classes. this is trash. Actually the HTML is trash to begin with. 
+    let key = document.querySelector(`.numButton[data-key = "${e.keyCode}"]`);
     if(!key){
         key = document.querySelector(`.operator[data-key = "${e.keyCode}"]`);
     }
