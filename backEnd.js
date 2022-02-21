@@ -13,7 +13,26 @@ let text = "";
 let decimalBtn = document.getElementById("dec");
 //signal if decimal was pressed. Cannot duel decimal in same number.
 let hasDecimal = false;
+//signal if shift has been pressed.... 
 
+
+window.addEventListener('keydown',function(e){
+  
+    var key = document.querySelector(`.numButton[data-key = "${e.keyCode}"]`);
+    if(!key){
+        key = document.querySelector(`.operator[data-key = "${e.keyCode}"]`);
+    }
+    if(!key){
+        key = document.querySelector(`.button[data-key = "${e.keyCode}"]`);
+    }
+    if(!key){
+        key = document.querySelector(`#equal[data-key = "${e.keyCode}"]`);
+    }
+    if(!key) return;
+    key.click();
+});
+
+decimalBtn.click();
 //clear clears readouts and resets the signals on special buttons to allow pressing/onclick again. Also resets storage array for expression.
 clearBtn.addEventListener("click", ()=>{
     currentExpression=[];
@@ -124,7 +143,7 @@ function displayEval(){
     let tempString = "";
 
     //what?? A. for the superscript in the upper left.
-    for(let i =0; i < currentExpression.length; i++){ 
+    for(let i = 0; i < currentExpression.length; i++){ 
       tempString = tempString + currentExpression[i];
     }
 
@@ -166,7 +185,7 @@ let y = 0;
 }
 //what if just a number and then the equals sign?? 
 if(currentExpression.length == 1){
-   result = lastNum;
+   result = currentExpression[0];
 }
 display.innerText = result;
 currentExpression=[];
